@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sa Projek</title>
+
+<!-- FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BODY */
+body {
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at center, #0a0f2c, #020617);
+    color: white;
+}
+
+/* CANVAS BACKGROUND */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+/* LIGHT SAMPING */
+.light {
+    position: fixed;
+    top: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(to bottom, cyan, purple);
+    box-shadow: 0 0 20px cyan, 0 0 40px purple;
+    animation: glow 2s infinite alternate;
+}
+
+.light.left { left: 0; }
+.light.right { right: 0; }
+
+@keyframes glow {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
+}
+
+/* CONTAINER */
+.container {
+    text-align: center;
+    padding-top: 40px;
+}
+
+/* TITLE */
+h1 {
+    font-size: 55px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #00f0ff, #ff00c8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(0,255,255,0.5);
+}
+
+.subtitle {
+    margin-top: 10px;
+    color: #ccc;
+}
+
+/* FOTO */
+.profile {
+    margin: 30px auto;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    padding: 5px;
+    background: linear-gradient(45deg, cyan, magenta);
+    box-shadow: 0 0 25px cyan;
+}
+
+.profile img {
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* BUTTON */
+.main-btn {
+    background: linear-gradient(90deg, #b7ff00, #00ffcc);
+    color: black;
+    padding: 15px 30px;
+    border-radius: 12px;
+    margin: 20px auto;
+    width: 300px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 0 15px #00ffcc;
+    transition: 0.3s;
+}
+
+.main-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #00ffcc;
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 200px);
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* CARD */
+.card {
+    background: rgba(255,255,255,0.9);
+    color: black;
+    padding: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    animation: float 3s ease-in-out infinite;
+}
+
+.card:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px cyan;
+}
+
+@keyframes float {
+    0%,100% { transform: translateY(0);}
+    50% { transform: translateY(-5px);}
+}
+
+/* POPUP */
+.popup {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: #111;
+    padding: 25px;
+    border-radius: 12px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 0 20px cyan;
+}
+
+.close {
+    margin-top: 15px;
+    background: red;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+</style>
+
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="light left"></div>
+<div class="light right"></div>
+
+<div class="container">
+    <h1>SA COMPANY</h1>
+    <p class="subtitle">Tagline Sa Company</p>
+
+    <div class="profile">
+        <img src="saprojek.png">
+    </div>
+
+    <div class="main-btn" onclick="openPopup('Menu utama dibuka')">
+        Web Sa Company
+    </div>
+
+    <div class="grid">
+        <div class="card" onclick="openPopup('Tiktok diklik')">Tiktok</div>
+        <div class="card" onclick="openPopup('Shopee diklik')">Shopee</div>
+        <div class="card" onclick="openPopup('Instagram diklik')">Instagram</div>
+        <div class="card" onclick="openPopup('Tokopedia diklik')">Tokopedia</div>
+        <div class="card" onclick="openPopup('WhatsApp diklik')">WhatsApp</div>
+        <div class="card" onclick="openPopup('Email diklik')">Email</div>
+    </div>
+</div>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+    <div class="popup-content">
+        <h2 id="popup-text"></h2>
+        <div class="close" onclick="closePopup()">Tutup</div>
+    </div>
+</div>
+
+<script>
+function openPopup(text) {
+    document.getElementById("popup").style.display = "flex";
+    document.getElementById("popup-text").innerText = text;
+}
+
+function closePopup() {
+    document.getElementById("popup").style.display = "none";
+}
+
+/* PARTICLE BACKGROUND */
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for(let i=0;i<120;i++){
+    particles.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        size: Math.random()*2,
+        speedX: Math.random()*1-0.5,
+        speedY: Math.random()*1-0.5
+    });
+}
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle = "rgba(0,255,255,0.7)";
+
+    particles.forEach(p=>{
+        p.x += p.speedX;
+        p.y += p.speedY;
+
+        if(p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+        if(p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+        ctx.fill();
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+</body>
+</html>
