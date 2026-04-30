@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SA COMPANY</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: #020617;
+    color: white;
+}
+
+/* BACKGROUND */
+.bg-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+canvas#shopScene {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.bg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(2, 6, 23, 0.55) 0%,
+        rgba(2, 6, 23, 0.80) 60%,
+        #020617 100%
+    );
+    z-index: 1;
+}
+
+/* LIGHT STRIP */
+.light {
+    position: fixed;
+    top: 0;
+    width: 5px;
+    height: 100%;
+    z-index: 5;
+    animation: glow 2s infinite alternate;
+}
+
+.light.left {
+    left: 0;
+    background: linear-gradient(to bottom, cyan, purple);
+    box-shadow: 0 0 20px cyan;
+}
+
+.light.right {
+    right: 0;
+    background: linear-gradient(to bottom, purple, cyan);
+    box-shadow: 0 0 20px purple;
+}
+
+@keyframes glow {
+    from { opacity: 0.5; }
+    to   { opacity: 1; }
+}
+
+/* SCROLL WRAPPER */
+.scroll-wrap {
+    position: relative;
+    z-index: 3;
+    min-height: 100vh;
+    padding: 40px 20px 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* TITLE */
+h1 {
+    font-size: 50px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #00f0ff, #ff00c8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 14px rgba(0,255,255,0.4));
+}
+
+.subtitle {
+    color: #bbb;
+    font-size: 14px;
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+/* PROFILE PHOTO */
+.profile {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    padding: 5px;
+    background: linear-gradient(45deg, cyan, magenta);
+    box-shadow: 0 0 28px rgba(0, 255, 255, 0.6);
+    margin-bottom: 28px;
+}
+
+.profile img {
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* MAIN BUTTON */
+.main-btn {
+    background: linear-gradient(90deg, #b7ff00, #00ffcc);
+    color: #000;
+    padding: 15px 30px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    width: 300px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 15px;
+    text-align: center;
+    box-shadow: 0 0 18px rgba(0, 255, 200, 0.5);
+    transition: transform 0.25s, box-shadow 0.25s;
+    user-select: none;
+}
+
+.main-btn:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 30px rgba(0, 255, 200, 0.8);
+}
+
+/* CARD GRID */
+.grid {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    width: 300px;
+}
+
+/* CARD */
+.card {
+    background: rgba(255, 255, 255, 0.92);
+    color: #000;
+    padding: 14px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 15px;
+    text-align: center;
+    transition: transform 0.25s, box-shadow 0.25s;
+    animation: float 3s ease-in-out infinite;
+    user-select: none;
+}
+
+.card:nth-child(1) { animation-delay: 0.0s; }
+.card:nth-child(2) { animation-delay: 0.3s; }
+.card:nth-child(3) { animation-delay: 0.6s; }
+.card:nth-child(4) { animation-delay: 0.9s; }
+.card:nth-child(5) { animation-delay: 1.2s; }
+.card:nth-child(6) { animation-delay: 1.5s; }
+
+.card:hover {
+    transform: scale(1.07);
+    box-shadow: 0 0 22px cyan;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-5px); }
+}
+
+/* POPUP */
+.popup-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    z-index: 999;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-bg.show {
+    display: flex;
+}
+
+.popup-box {
+    background: #111;
+    border: 1.5px solid cyan;
+    padding: 28px 24px;
+    border-radius: 14px;
+    width: 290px;
+    text-align: center;
+    box-shadow: 0 0 28px rgba(0, 255, 255, 0.45);
+}
+
+.popup-box h2 {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.btn-go {
+    background: cyan;
+    color: #000;
+    padding: 10px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    display: inline-block;
+    margin-right: 8px;
+    transition: opacity 0.2s;
+}
+
+.btn-go:hover { opacity: 0.8; }
+
+.btn-close {
+    background: #c0392b;
+    color: white;
+    padding: 10px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    display: inline-block;
+    transition: opacity 0.2s;
+}
+
+.btn-close:hover { opacity: 0.8; }
+</style>
+</head>
+<body>
+
+<!-- BACKGROUND ANIMASI -->
+<div class="bg-wrap">
+    <canvas id="shopScene"></canvas>
+    <div class="bg-overlay"></div>
+</div>
+
+<!-- CAHAYA SAMPING -->
+<div class="light left"></div>
+<div class="light right"></div>
+
+<!-- KONTEN UTAMA (BISA SCROLL) -->
+<div class="scroll-wrap">
+
+    <h1>SA COMPANY</h1>
+    <p class="subtitle">Tagline Sa Company</p>
+
+    <div class="profile">
+        <img
+            src="saprojek.png"
+            onerror="this.src='https://ui-avatars.com/api/?name=SA&background=00f0ff&color=020617&size=150&bold=true'"
+            alt="Profile"
+        >
+    </div>
+
+    <div class="main-btn" onclick="openPopup('Web Sa Company', '#')">
+        🌐 Web Sa Company
+    </div>
+
+    <div class="grid">
+        <div class="card" onclick="openPopup('TikTok',    'https://tiktok.com')">🎵 TikTok</div>
+        <div class="card" onclick="openPopup('Shopee',    'https://shopee.co.id')">🛍️ Shopee</div>
+        <div class="card" onclick="openPopup('Instagram', 'https://instagram.com')">📸 Instagram</div>
+        <div class="card" onclick="openPopup('Tokopedia', 'https://tokopedia.com')">🛒 Tokopedia</div>
+        <div class="card" onclick="openPopup('WhatsApp',  'https://wa.me/62XXXXXXXXXX')">💬 WhatsApp</div>
+        <div class="card" onclick="openPopup('Email',     'mailto:email@email.com')">✉️ Email</div>
+    </div>
+
+</div>
+
+<!-- POPUP -->
+<div class="popup-bg" id="popup">
+    <div class="popup-box">
+        <h2 id="popup-text"></h2>
+        <span class="btn-go"    onclick="goLink()">Kunjungi</span>
+        <span class="btn-close" onclick="closePopup()">Tutup</span>
+    </div>
+</div>
+
+<script>
+/* ========== POPUP ========== */
+let curLink = "#";
+
+function openPopup(nama, link) {
+    document.getElementById("popup").classList.add("show");
+    document.getElementById("popup-text").innerText = nama;
+    curLink = link;
+}
+
+function closePopup() {
+    document.getElementById("popup").classList.remove("show");
+}
+
+function goLink() {
+    window.open(curLink, "_blank");
+}
+
+/* ========== ANIMASI ORANG BELANJA ========== */
+const canvas = document.getElementById("shopScene");
+const ctx    = canvas.getContext("2d");
+
+function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+/* Warna */
+const skinColors  = ["#FDBCB4","#F1C27D","#C68642","#8D5524"];
+const shirtColors = ["#ff6b9d","#00d4ff","#a78bfa","#ffd700","#ff9f43","#6ee7b7","#f97316","#34d399"];
+const bagColors   = ["#f43f5e","#8b5cf6","#0ea5e9","#f59e0b","#10b981","#ec4899","#22d3ee","#a3e635"];
+
+/* Buat karakter */
+const shoppers = [];
+for (let i = 0; i < 9; i++) {
+    shoppers.push({
+        x:          Math.random() * window.innerWidth,
+        y:          90 + Math.random() * (window.innerHeight - 200),
+        dir:        Math.random() > 0.5 ? 1 : -1,
+        speed:      0.35 + Math.random() * 0.55,
+        frame:      Math.random() * Math.PI * 2,
+        size:       26 + Math.random() * 18,
+        skin:       skinColors[Math.floor(Math.random() * skinColors.length)],
+        shirt:      shirtColors[i % shirtColors.length],
+        bag:        bagColors[(i + 4) % bagColors.length],
+        hasTrolley: i % 4 === 0
+    });
+}
+
+/* Ikon produk melayang */
+const itemSymbols = ["👜","👗","👟","🛍️","💄","⌚","📱","💍","👒","🧴","👛","🎁","🩱","🕶️"];
+const floatItems  = [];
+for (let i = 0; i < 16; i++) {
+    floatItems.push({
+        x:     Math.random() * window.innerWidth,
+        y:     Math.random() * window.innerHeight,
+        sym:   itemSymbols[i % itemSymbols.length],
+        vy:    -(0.25 + Math.random() * 0.35),
+        alpha: 0.18 + Math.random() * 0.35,
+        size:  13 + Math.random() * 14,
+        drift: (Math.random() - 0.5) * 0.35
+    });
+}
+
+/* Partikel */
+const particles = [];
+for (let i = 0; i < 90; i++) {
+    particles.push({
+        x:  Math.random() * 2000,
+        y:  Math.random() * 2000,
+        sz: Math.random() * 1.6,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4
+    });
+}
+
+/* Gambar satu karakter */
+function drawShopper(s, t) {
+    const scale    = s.size / 30;
+    const legSwing = Math.sin(t * 2.8 + s.frame) * 0.38;
+    const armSwing = Math.sin(t * 2.8 + s.frame) * 0.42;
+    const bob      = Math.abs(Math.sin(t * 2.8 + s.frame)) * 3.5;
+    const ry       = s.y + bob;
+
+    ctx.save();
+    ctx.translate(s.x, ry);
+    ctx.scale(s.dir * scale, scale);
+
+    /* bayangan */
+    ctx.beginPath();
+    ctx.ellipse(0, 34, 16, 5, 0, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(0,0,0,0.22)";
+    ctx.fill();
+
+    /* kaki kiri */
+    ctx.save();
+    ctx.rotate(legSwing);
+    ctx.beginPath();
+    ctx.moveTo(-5, 12); ctx.lineTo(-6, 32);
+    ctx.strokeStyle = s.shirt; ctx.lineWidth = 5.5; ctx.lineCap = "round"; ctx.stroke();
+    ctx.beginPath();
+    ctx.ellipse(-7, 33, 5, 3, -0.3, 0, Math.PI * 2);
+    ctx.fillStyle = "#333"; ctx.fill();
+    ctx.restore();
+
+    /* kaki kanan */
+    ctx.save();
+    ctx.rotate(-legSwing);
+    ctx.beginPath();
+    ctx.moveTo(5, 12); ctx.lineTo(6, 32);
+    ctx.strokeStyle = s.shirt; ctx.lineWidth = 5.5; ctx.lineCap = "round"; ctx.stroke();
+    ctx.beginPath();
+    ctx.ellipse(7, 33, 5, 3, 0.3, 0, Math.PI * 2);
+    ctx.fillStyle = "#333"; ctx.fill();
+    ctx.restore();
+
+    /* badan */
+    ctx.beginPath();
+    ctx.moveTo(0, -5); ctx.lineTo(0, 13);
+    ctx.strokeStyle = s.shirt; ctx.lineWidth = 8; ctx.lineCap = "round"; ctx.stroke();
+
+    /* tangan kanan + tas */
+    ctx.save();
+    ctx.rotate(-armSwing - 0.15);
+    ctx.beginPath();
+    ctx.moveTo(0, 0); ctx.lineTo(15, 12);
+    ctx.strokeStyle = s.skin; ctx.lineWidth = 4; ctx.lineCap = "round"; ctx.stroke();
+
+    if (s.hasTrolley) {
+        /* trolley */
+        ctx.strokeStyle = "#ccc"; ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(15, 12); ctx.lineTo(26, 12);
+        ctx.lineTo(28, 20); ctx.lineTo(14, 20);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fillStyle = "rgba(255,255,255,0.15)"; ctx.fill();
+        ctx.fillStyle = "#aaa";
+        ctx.beginPath(); ctx.arc(17, 23, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(25, 23, 2, 0, Math.PI * 2); ctx.fill();
+    } else {
+        /* tas tangan */
+        ctx.beginPath();
+        ctx.rect(10, 10, 12, 14);
+        ctx.fillStyle = s.bag; ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.3)"; ctx.lineWidth = 1; ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(12, 10); ctx.quadraticCurveTo(16, 4, 20, 10);
+        ctx.strokeStyle = s.bag; ctx.lineWidth = 1.8; ctx.stroke();
+        ctx.fillStyle = "rgba(255,255,255,0.5)";
+        ctx.font = "5px sans-serif";
+        ctx.fillText("★", 13, 20);
+    }
+    ctx.restore();
+
+    /* tangan kiri */
+    ctx.save();
+    ctx.rotate(armSwing);
+    ctx.beginPath();
+    ctx.moveTo(0, 0); ctx.lineTo(-13, 9);
+    ctx.strokeStyle = s.skin; ctx.lineWidth = 4; ctx.lineCap = "round"; ctx.stroke();
+    ctx.restore();
+
+    /* leher */
+    ctx.beginPath();
+    ctx.moveTo(0, -5); ctx.lineTo(0, -8);
+    ctx.strokeStyle = s.skin; ctx.lineWidth = 5; ctx.stroke();
+
+    /* kepala */
+    ctx.beginPath();
+    ctx.arc(0, -16, 10, 0, Math.PI * 2);
+    ctx.fillStyle = s.skin; ctx.fill();
+
+    /* rambut */
+    ctx.beginPath();
+    ctx.arc(0, -19, 10, Math.PI, 0);
+    ctx.fillStyle = "#3b1f00"; ctx.fill();
+
+    /* mata */
+    ctx.fillStyle = "#fff";
+    ctx.beginPath(); ctx.arc(-3.5, -17, 2.2, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc( 3.5, -17, 2.2, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#222";
+    ctx.beginPath(); ctx.arc(-3.5, -17, 1.1, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc( 3.5, -17, 1.1, 0, Math.PI * 2); ctx.fill();
+
+    /* senyum */
+    ctx.beginPath();
+    ctx.arc(0, -13, 4.5, 0.15, Math.PI - 0.15);
+    ctx.strokeStyle = "#b25000"; ctx.lineWidth = 1.4; ctx.stroke();
+
+    ctx.restore();
+}
+
+/* Loop utama */
+let t = 0;
+function draw() {
+    t += 0.016;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    /* partikel */
+    ctx.fillStyle = "rgba(0,255,255,0.4)";
+    particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width)  p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    /* ikon melayang */
+    floatItems.forEach(it => {
+        it.y += it.vy;
+        it.x += it.drift;
+        if (it.y < -30) { it.y = canvas.height + 10; it.x = Math.random() * canvas.width; }
+        ctx.globalAlpha = it.alpha * (0.7 + 0.3 * Math.sin(t * 1.8 + it.x));
+        ctx.font = it.size + "px serif";
+        ctx.fillText(it.sym, it.x, it.y);
+        ctx.globalAlpha = 1;
+    });
+
+    /* karakter belanja */
+    shoppers.forEach(s => {
+        s.x += s.dir * s.speed;
+        if (s.x > canvas.width  + 80) s.x = -80;
+        if (s.x < -80) s.x = canvas.width + 80;
+        drawShopper(s, t);
+    });
+
+    requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+</body>
+</html>
