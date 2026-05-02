@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SA Company</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* BACKGROUND */
+body {
+  height: 100vh;
+  background: url('belanja.png') no-repeat center center/cover;
+  overflow: hidden;
+}
+
+/* OVERLAY biar teks kebaca */
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.6);
+  top: 0;
+  left: 0;
+}
+
+/* CONTAINER TENGAH */
+.container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* CARD */
+.card {
+  text-align: center;
+  padding: 20px;
+  border-radius: 15px;
+
+  /* efek blur */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  /* transparan biar keliatan background */
+  background: rgba(155, 155, 155, 0.25);
+
+  /* efek kaca */
+  border: 1px solid rgba(155,155,155,0.3);
+  box-shadow: 0 6px 28px rgba(0,0,0,0.2);
+}
+
+/* TITLE */
+h1 {
+  color: #d81b60;
+  font-size: 45px;
+  font-weight: 700;
+}
+
+.tagline {
+  color: #555;
+  margin: 10px 0 20px;
+}
+
+/* LOGO */
+.logo {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* BUTTON */
+.btn {
+  display: block;
+  width: 260px;
+  padding: 12px;
+  margin: 10px auto;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+/* PRIMARY */
+.btn-primary {
+  background: linear-gradient(45deg, #ff2e88, #8e2de2);
+  color: white;
+  box-shadow: 0 5px 15px rgba(255, 0, 100, 0.3);
+}
+
+/* SECONDARY */
+.btn-secondary {
+  background: #e0e0e0;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+/* SALJU */
+.snow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.snow span {
+  position: absolute;
+  top: -10px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: jatuh linear infinite;
+}
+
+@keyframes jatuh {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(100vh); }
+}
+</style>
+
+</head>
+<body>
+
+<div class="overlay"></div>
+
+<!-- SALJU -->
+<div class="snow" id="snow"></div>
+
+<!-- KONTEN -->
+<div class="container">
+  <div class="card">
+
+    <h1>SA COMPANY</h1>
+    <p class="tagline">✨ Tagline Sa Company</p>
+
+    <div class="logo">
+      <img src="logo.png" alt="logo">
+    </div>
+
+    <button class="btn btn-primary">🌐 Web Sa Company</button>
+    <button class="btn btn-secondary">🎵 TikTok</button>
+    <button class="btn btn-secondary">🛍 Shopee</button>
+    <button class="btn btn-secondary">📷 Instagram</button>
+    <button class="btn btn-secondary">🛒 Tokopedia</button>
+    <button class="btn btn-secondary">💬 WhatsApp</button>
+
+  </div>
+</div>
+
+<script>
+const snowContainer = document.getElementById('snow');
+
+for (let i = 0; i < 80; i++) {
+  let snow = document.createElement('span');
+
+  let size = Math.random() * 5 + 2;
+  snow.style.width = size + 'px';
+  snow.style.height = size + 'px';
+
+  snow.style.left = Math.random() * window.innerWidth + 'px';
+  snow.style.animationDuration = (Math.random() * 5 + 5) + 's';
+  snow.style.opacity = Math.random();
+
+  snowContainer.appendChild(snow);
+}
+</script>
+
+</body>
+</html>
